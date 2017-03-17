@@ -13,7 +13,8 @@ usage: perl addSamplQualByFasta -q FASTQ_DIR -f FASTA_FILE -o OUTPUT_FILE -m MAP
 
 
 ### demultiplex.pl
-Simple demultiplexing script for demultiplexing reads of structure:
+Simple demultiplexing script for dual barcode single-end reads of structure:
+
 BARCODE (fw) - PRIMER (fw) - INSERT - PRIMER (rv) - BARCODE (rv) - ILLUMINA PRIMER
 
 
