@@ -48,6 +48,7 @@ sub _main{
     my $output = $opts{'o'};
     my $m = $opts{'m'};
 
+
     if(!$fq||!$output||!$fasta_in||!$m){
         _usage();
     }
@@ -59,7 +60,7 @@ sub _main{
     }
     elsif(-d $fq){
         opendir(DIR,$fq);
-        @files = map{"$fq/$_"}grep{($_=~/^.*_R1_.*/)||($_=~/^.*forward.*/)}grep{(($_=~/^.*\.fq/)||($_=~/^.*\.fastq/))}readdir(DIR);
+        @files = map{"$fq/$_"}grep{($_=~/^.*_R1.*/)||($_=~/^.*forward.*/)}grep{(($_=~/^.*\.fq[\.gz]*/)||($_=~/^.*\.fastq[\.gz]*/))}readdir(DIR);
         if(!(scalar(@files))){
             warn "No files ending on .fq or .fastq found in directory $fq";
             _usage();
@@ -124,7 +125,14 @@ sub _getLookup{
         die "No sample_id found for file $fn" unless $map->{$fn};
         push @$ml, $map->{$fn};
 
-        open(my $ih,"<",$f) or die "Failed to open $f for reading.";
+
+        my $ih;
+        if($f=~/^.*.gz$/){
+            open($ih,"-|","gunzip","-c",$f) or die "Failed to open $f for reading.";
+        }
+        else{
+            open($ih,"<",$f) or die "Failed to open $f for reading.";
+        }
         while(my $line=<$ih>){
             if($.==1||!(($.-1)%4)){
                 my @ls = grep{$_ ne ""}split(/[@\s\t\n\r]/,$line);
@@ -180,7 +188,7 @@ sub _checkMap{
 sub _usage{
     print STDOUT "\n\nScript adds the sample qualifier to sequences based on the name of a given fastq file.\nSequences that can not be assigned a sample are removed from the output file.\n";
     print STDOUT "Parameter:\n";
-    print STDOUT "q : fastq file or directory of fastq files\n";
+    print STDOUT "q : directory of fastq files\n";
     print STDOUT "f : fasta file\n";
     print STDOUT "o : output file\n";
     print STDOUT "m : mapping file of fastq file name to sample_id.\n    One line per sample: first fastq file name then sample_id separated by tab or
