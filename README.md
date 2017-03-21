@@ -28,5 +28,8 @@ usage: getFractionPerSample.pl -i INPUT_TABLE -o OUTPUT_TABLE -f FRACTION
 
 
 
+### filterOTU.pl
+Script to filter OTU table (tab separated) by per-sample fraction: keeps all OTUs that represent at least given fraction of reads/abundance of any sample.
 
+usage: filterOTU.pl -i INPUT_OTU -o OUTPUT_OTU -f FRACTION
 
