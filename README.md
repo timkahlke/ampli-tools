@@ -22,7 +22,7 @@ usage: demultiplex [-c -f] -i FASTQ -m MOTHUR_OLIGOS -o OUTPUT_DIR
 
 
 ### filter_otu_by_replicate_fraction.pl
-Script takes a tab separates file of OTU abundances (rows) per replicate (cols), adds columns "row average", "sum abundance" and "adjusted abundance" and removes those OTUs where the row average is below a given threshold.
+Script takes a tab separates file of OTU abundances (rows) per replicate (cols), adds columns "row average", "sum" and "adjusted abundance" and removes those OTUs where the row average is below a given threshold.
 
 usage: getFractionPerSample.pl -i INPUT_TABLE -o OUTPUT_TABLE -f FRACTION
 
