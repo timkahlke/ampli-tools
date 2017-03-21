@@ -38,13 +38,14 @@ if($@){
 
 sub _main{
     our %opts;
-    getopts("i:o:f:",\%opts);
+    getopts("a:i:o:f:",\%opts);
     
     my $if = $opts{'i'};
     my $of = $opts{'o'};
     my $frac = $opts{'f'};
+    my $axis = $opts{'a'}?$opts{'a'}:"y";
 
-    if(!$if||!$of||!$frac){
+    if(!$if||!$of||!$frac||($axis ne "x" && $axis ne "y")){
         _usage();
     }
 
@@ -53,16 +54,28 @@ sub _main{
     print STDOUT "... Done.\n";
 
     print STDOUT "\n[STATUS] Filtering OTUs ...\n";
-    my $keep = _filterM($m,$frac,scalar(@$ch)-1);
+    my $keep = _filterM($m,$frac,scalar(@$ch)-1,$axis);
     print STDOUT "... Done.\n";
 
     print STDOUT "\n[STATUS] Writing output file ...\n";
     open(my $oh,">",$of) or die "Failed to open $of";
-    print $oh join("\t",@$ch);
+
+    # add additionaly columns
+    if($axis eq "x"){
+        push @$ch, "row average";
+        push @$ch, "total average";
+        push @$ch, "adjusted average";
+    }
+
+    # print header
+    print $oh join("\t",@$ch)."\n";
+
+    # write rows
     foreach my $otu(sort(@$keep)){
         print $oh $otu."\t".join("\t",@{$m->{$otu}})."\n";
     }
     close($oh);
+
     print STDOUT "... Done.\n\n\n";
 }
 
@@ -70,23 +83,76 @@ sub _main{
 # Get name of OTUs to keep
 # sn = number of samples in matrix
 sub _filterM{
-    my ($m,$frac,$sn) = @_;
+    my ($m,$frac,$sn,$axis) = @_;
 
     my $kh = {};
-    for(my $i = 0;$i<$sn;$i++){
-        my $sum = _getSampleSum($i,$m);
-        foreach(keys(%$m)){
-            if(($m->{$_}->[$i]/$sum)>=$frac){
-                $kh->{$_} = 1;
+    # Average over columns
+    if($axis eq "y"){
+        for(my $i = 0;$i<$sn;$i++){
+
+            # get column sum
+            my $sum = _getXSum($i,$m);
+
+            # check if OTU if above given fraction 
+            foreach(keys(%$m)){
+                if(($m->{$_}->[$i]/$sum)>=$frac){
+                    $kh->{$_} = 1;
+                }
             }
         }
     }
+    else{
+
+        # total aaverage
+        my $ta = 0;
+        foreach my $r(keys(%$m)){
+
+            # get row sum
+            my $sum = _getYSum($m->{$r});
+
+            # add row average to row
+            push @{$m->{$r}},($sum/$sn);
+
+            # add total average
+            $ta += ($sum/$sn);
+        } 
+
+        # In case the abundance was calculated with more OTUs than 
+        # included in the table this re-calculates the abundance based
+        # on the sum of the average abundance.
+        foreach my $r(keys(%$m)){
+
+            # add total average (same for all rows)
+            push @{$m->{$r}},$ta;
+
+            # add adjusted average
+            push @{$m->{$r}},($m->{$r}->[-2]/$m->{$r}->[-1]);
+
+            # get rows above threshold
+            if($m->{$r}->[-1]>=$frac){
+                $kh->{$r} = 1;
+            }
+        }
+    }
+
     my @keep = keys(%$kh);
     return \@keep;
 }
 
-# Get abundance sum of sample
-sub _getSampleSum{
+
+# Get row sum
+sub _getYSum{
+    my $r = shift;
+    my $sum = 0;
+    foreach(@$r){
+        $sum+=$_;
+    }
+    return $sum;
+}
+
+
+# Get column sum
+sub _getXSum{
     my ($i,$m) = @_;
     my $sum = 0;
     foreach(keys(%$m)){
@@ -102,6 +168,9 @@ sub _readOTU{
     my $m = {};
     open(my $ih,"<",$file) or die "Failed to open $file";
     my @ch = split(/\t/,readline($ih));
+
+    $ch[-1]=~s/[\r\n]//g;
+
     while(my $line=<$ih>){
         $line=~s/[\r\n]//g;
         my @ls = split(/\t/,$line);
@@ -116,9 +185,14 @@ sub _readOTU{
 sub _usage{
     print STDOUT "\n\n\Script to filter OTU table by per sample fraction\n";
     print STDOUT "Parameter:\n";
-    print STDOUT "i : input OTU table:\n\tRows = OTUs\n\tColumns = Samples\n\tFirst row and column = headers\n";
+    print STDOUT "i : input OTU table\n";
     print STDOUT "o : output file\n";
     print STDOUT "f : minimum percentage of OTUs to keep (0.1 = 10%)\n";
+    print STDOUT "a : axis to average over, x for rows, y for columns (default = y)\n    If set to x three additional columns will be added:\n    \'row average\',\'total average\' and \'adjusted average\'\n";
     print STDOUT "\n\n";
     exit;
 }
+
+
+
+

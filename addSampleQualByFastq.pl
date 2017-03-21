@@ -62,12 +62,12 @@ sub _main{
         opendir(DIR,$fq);
         @files = map{"$fq/$_"}grep{($_=~/^.*_R1.*/)||($_=~/^.*forward.*/)}grep{(($_=~/^.*\.fq[\.gz]*/)||($_=~/^.*\.fastq[\.gz]*/))}readdir(DIR);
         if(!(scalar(@files))){
-            warn "No files ending on .fq or .fastq found in directory $fq";
+            warn "\n[ERROR] No files ending on .fq or .fastq found in directory $fq";
             _usage();
         }
     }
     else{
-        warn "-q options is neither a file nor a directory!";
+        warn "\n[ERROR] -q options is neither a file nor a directory!";
         _usage();
     }
 
@@ -122,7 +122,7 @@ sub _getLookup{
         print STDOUT "[STATUS]\tParsing file $f\n"; 
         my $i = scalar(@$ml);
         my $fn = (split(/\//,$f))[-1];
-        die "No sample_id found for file $fn" unless $map->{$fn};
+        die "\n[ERROR] No sample_id found for file $fn" unless $map->{$fn};
         push @$ml, $map->{$fn};
 
 
@@ -156,7 +156,7 @@ sub _readMap{
     open(my $ih,"<",$file) or die "Failed to open $file";
     while(my $line=<$ih>){
         my @ls = grep{$_ ne ""}split(/[\s\t\n]/,$line);
-        die "Unknown line format! More than two elements found in line $line!\nDoes your sample ID or fastq file include spaces or tabs?" unless
+        die "\n[ERROR] Unknown line format! More than two elements found in line $line!\nDoes your sample ID or fastq file include spaces or tabs?" unless
         scalar(@ls)==2;
         $result->{$ls[0]} = $ls[1];
     }
