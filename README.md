@@ -21,14 +21,14 @@ usage: demultiplex [-c -f] -i FASTQ -m MOTHUR_OLIGOS -o OUTPUT_DIR
 
 
 
-### getFractionPerSample.pl
+### filter_otu_by_replicate_fraction.pl
 Script takes a tab separates file of overal relative OTU abundance (rows) per replicate (cols), adds columns 'average count' and 'sum abundance' and removes OTUs below a given abundance 
 
 usage: getFractionPerSample.pl -i INPUT_TABLE -o OUTPUT_TABLE -f FRACTION
 
 
 
-### filterOTU.pl
+### filter_otu_by_sample_fraction.pl
 Script to filter OTU table (tab separated) by per-sample fraction: keeps all OTUs that represent at least given fraction of reads/abundance of any sample.
 
 usage: filterOTU.pl -i INPUT_OTU -o OUTPUT_OTU -f FRACTION
