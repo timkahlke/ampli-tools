@@ -15,8 +15,8 @@
 #   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 #   GNU General Public License for more details.
 #
-#    You should have received a copy of the GNU General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#   You should have received a copy of the GNU General Public License
+#   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 #
 #
@@ -116,7 +116,7 @@ sub _getM{
 
 
 sub _usage{
-    print STDOUT "\n\nScript takes a tab separates file of overal relative OTU abundance (rows) per replicate (cols),\nadds columns \'average count\' and \'sum abundance\' and removes OTUs below a given abundance \n";
+    print STDOUT "\n\nScript takes a tab separates file of relative OTU abundance (rows) per replicate (cols),\nadds columns \'average count\' and \'sum abundance\' and removes OTUs below a given abundance \n";
     print STDOUT "Note: Rows starting with \'#\' are ignored. First column is considered OTU name\n";
     print STDOUT "Parameter:\n";
     print STDOUT "i : input table (tab separated)\n";
