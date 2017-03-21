@@ -61,7 +61,7 @@ sub _main{
     for(my $x = 1;$x<(scalar(@{$m->[0]})-3);$x++){
         print $oh "Replicate_".$x."\t"; 
     }
-    print $oh "average\ttotal averages\trelative average\n";
+    print $oh "row average\tsum average\tadjusted average\n";
 
     # filter and print output
     foreach my $line(@$m){
