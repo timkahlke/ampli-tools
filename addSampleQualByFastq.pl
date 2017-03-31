@@ -122,9 +122,9 @@ sub _getLookup{
         print STDOUT "[STATUS]\tParsing file $f\n"; 
         my $i = scalar(@$ml);
         my $fn = (split(/\//,$f))[-1];
-        die "\n[ERROR] No sample_id found for file $fn" unless $map->{$fn};
+        print STDOUT "\n[WARNING] No sample_id found for file $fn (not in mapping file). Skipping file!" unless $map->{$fn};
+        next unless $map->{$fn}
         push @$ml, $map->{$fn};
-
 
         my $ih;
         if($f=~/^.*.gz$/){
