@@ -96,7 +96,14 @@ sub _demux{
 
     my $fhs = _getFHs($ms,$od,$fasta);
 
-    open(my $ih,"<",$in) or die "Failed to open file $in for reading.";
+    my $ih;
+    if($in=~/.*\.gz$/){
+        open($ih,"-|","gunzip","-c",$in) or die "Failed to open $in for reading.";
+    }
+    else{
+        open($ih,"<",$in) or die "Failed to open file $in for reading.";
+    }
+
     print STDOUT "\n[STATUS] Parsing file $in\n";
     while(!(eof $ih)){
         my $sid = readline($ih);
