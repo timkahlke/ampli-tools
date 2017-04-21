@@ -122,6 +122,7 @@ sub _demux{
 
             if($seq=~/^$f(.*)$r(.*)$/){
                 my $insert = $1;
+                next unless length($insert);
                 my $suffix = $2;
                 if($clip){
                     $seq=$insert."\n";
