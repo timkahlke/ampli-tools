@@ -57,6 +57,8 @@ sub _main{
         if($line=~/^>([^;]+);sample=([^;]+);.*$/){
             my $seqid = $1;
             my $sampleid = $2;
+            $seqid=~s/_/:/g;
+            $sampleid=~s/_/-/g;
             print $oh ">$sampleid"."_"."$seqid\n";
         }
         else{
