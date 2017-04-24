@@ -109,7 +109,8 @@ sub _demux{
         my $sid = readline($ih);
         my $seq = readline($ih);
         my $plus = readline($ih);
-        my $qual = readline($ih);
+        my $qual = readline($ih)."\n";
+        $qual=~s/\n\n/\n/;
 
         if(!(($./4)%10000)){
             print STDOUT "\t$. lines parsed\n";
@@ -121,6 +122,7 @@ sub _demux{
 
             if($seq=~/^$f(.*)$r(.*)$/){
                 my $insert = $1;
+                next unless length($insert);
                 my $suffix = $2;
                 if($clip){
                     $seq=$insert."\n";

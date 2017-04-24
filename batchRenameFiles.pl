@@ -43,7 +43,7 @@ sub main{
     our %opts;
     getopts("d:o:n:s:p:e:r",\%opts);
     my $id = $opts{'d'};
-    my $n = $opts{'n'};
+    my @tmp_n = $opts{'n'}?grep{$_ ne ""}split(/[\s\t\n,]/,$opts{'n'}):0;
     my $sep=$opts{'s'}?$opts{'s'}:'.';
     if($sep=~/[\\.\*\$\^\|]/){
         $sep='\\'.$sep;
@@ -51,8 +51,15 @@ sub main{
     my $postfix = $opts{'p'}?".".$opts{'p'}:"";
     my $fe = $opts{'e'};
 
-    if(!$fe||!$id||!$n){
+    if(!$fe||!$id||!@tmp_n){
         _usage();
+    }
+
+    my $n = {};
+    my $max = 0;
+    foreach(@tmp_n){
+        $n->{$_} = 1;
+        $max=$_>$max?$_:$max;
     }
 
     # Read input directory
@@ -64,14 +71,33 @@ sub main{
     # Rename files
     foreach my $f(@files){
         my @fs = split(/$sep/,$f);
-        my $ext = pop(@fs);
+        if($sep ne "."){
+            my @ef = split(/\./,$fs[-1]);
+            pop(@ef);
+            $fs[-1]=join(".",@ef);
+        }
+        else{
+            pop(@fs);
+        }
 
         # Check that given n is <= file name split at $seq
-        if(scalar(@fs)<$n){
+        if(scalar(@fs)<$max){
             die "\n[ERROR] File name $f contains less elements than given with parameter \'n\' when split at $sep!\n";
         }
 
-        my $nn = join("$sep",splice(@fs,0,$n)).$postfix.".$fe";
+
+
+        my @na = ();
+        foreach(sort(keys(%$n))){
+            push @na,@fs[$_-1];
+        }
+        
+
+        my $nn = join("$sep",@na);
+        if($postfix){
+            $nn.=$postfix.".";
+        }
+        $nn.=$fe;
         $nn=~s/\\//g;
 
 
@@ -90,12 +116,13 @@ sub _usage{
     print STDOUT "Paramter:\n";
     print STDOUT "d : directory of files to be renamed\n";
     print STDOUT "s : separator input file names will be split at (default \'.\')\n";
-    print STDOUT "n : After splitting the file name on separator \'n\' elements will be kept for new file name.\n";
+    print STDOUT "n : List of name elements to keep sepearted by \,\.\n";
+    print STDOUT "    After splitting the file name on separator elements on given indices will be kept for new file name.\n";
     print STDOUT "    Example:\n";
     print STDOUT "    --------\n";
     print STDOUT "    Input file name: test.input.ABC.DEF.fastq\n";
-    print STDOUT "    If parameter \'n\' = 2 the output file name will be \'test.file.fastq\'\n";
-    print STDOUT "    If parameter \'n\' = 3 the output file name will be \'test.file.ABC.fastq\'\n";
+    print STDOUT "    If parameter \'n\' = 1,2 the output file name will be \'test.file.fastq\'\n";
+    print STDOUT "    If parameter \'n\' = 1,3 the output file name will be \'test.ABC.fastq\'\n";
     print STDOUT "p : postfix for file names (optional). Will be added before given file extension\n";
     print STDOUT "e : file extension, e.g. \'fastq\'\n";
     print STDOUT "\n\n";
