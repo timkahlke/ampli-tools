@@ -1,5 +1,5 @@
 # ampli-tool
-Collection of helper scripts for amplicon sequence analysis
+Collection of helper scripts for amplicon sequence analysis, e.g. as outlined in the workflow in the docs directory.
 
 Note: to get a full list of possible parameters and a short description of each tool just call the script without parameters.
 
@@ -37,10 +37,10 @@ usage: filter_otu_by_sample_fraction.pl -i INPUT_OTU -o OUTPUT_OTU -f FRACTION
 
 
 
-### batchCountFastq.pl
+### batchCountFastqSeqs.pl
 Script to count sequences of all fastq files in given directory. Prints out a list of "filename: SEQ_NUM" Additionally performs basic check of correct format, i.e., checks that number of line is a multiple of 4
 
-usage: batchCountFastq.pl -d FASTQ_DIRECTORY
+usage: batchCountFastqSeqs.pl -d FASTQ_DIRECTORY
 
 
 
@@ -49,4 +49,9 @@ Script to rename all files in a directory. It splits all files of given extensio
 
 usage: batchRenameFiles.pl -d INPUT_FILE_DIRECTORY -f NUMBER_OF_SEGMETNS_TO_KEEP -e FILE_EXTENSION
 
+
+### extract_seqs_from_aln.pl
+Script removes all sequences from a (large) alignments file that are not included in a provided fasta file. Gaps are to 100% conserved in the resulting alignment.
+
+usage: extract_seqs_from_aln.pl -i ALIGNED_INPUT_FASTA -o ALIGNED_OUTPUT_FASTA -f LIST_FASTA_FILE
 
