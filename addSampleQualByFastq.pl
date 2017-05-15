@@ -119,10 +119,10 @@ sub _getLookup{
     my $ml = [];
     my $reads = {};
     foreach my $f(@$files){
-        print STDOUT "[STATUS]\tParsing file $f\n"; 
+        print STDOUT "\n[STATUS]\tParsing file $f\n"; 
         my $i = scalar(@$ml);
         my $fn = (split(/\//,$f))[-1];
-        print STDOUT "\n[WARNING] No sample_id found for file $fn (not in mapping file). Skipping file!" unless $map->{$fn};
+        print STDOUT "\n[WARNING] No sample_id found for file $fn (not in mapping file). Skipping file!" unless $map->{$fn}."\n";
         next unless $map->{$fn};
         push @$ml, $map->{$fn};
 
