@@ -60,7 +60,7 @@ sub _main{
     }
     elsif(-d $fq){
         opendir(DIR,$fq);
-        @files = map{"$fq/$_"}grep{($_=~/^.*_R1.*/)||($_=~/^.*forward.*/)}grep{(($_=~/^.*\.fq[\.gz]*/)||($_=~/^.*\.fastq[\.gz]*/))}readdir(DIR);
+        @files = map{"$fq/$_"}grep{($_=~/^.*R1.*/)||($_=~/^.*forward.*/)}grep{(($_=~/^.*\.fq[\.gz]*/)||($_=~/^.*\.fastq[\.gz]*/))}readdir(DIR);
         if(!(scalar(@files))){
             warn "\n[ERROR] No files ending on .fq or .fastq found in directory $fq";
             _usage();
