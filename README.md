@@ -5,7 +5,6 @@ Note: to get a full list of possible parameters and a short description of each 
 
 
 ---
----
 
 ### docs/amplicon_pipeline.pdf
 
