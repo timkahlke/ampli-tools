@@ -73,7 +73,7 @@ sub _getGroup{
         next unless $centroids->{$s[-1]};
         $reads->{$s[-2]} = 1;
     }
-    foreach $c(keys(%$centroids)){
+    foreach my $c(keys(%$centroids)){
         $reads->{$c} = 1;
     }
     close($uh);
@@ -100,7 +100,7 @@ sub _usage{
     print STDOUT "u : uc file\n";
     print STDOUT "f : fasta file\n";
     print STDOUT "o : output fasta directory\n";
-    print STDOUT "m : mapping file with first columnrepresentative sequence name, second column group name\n";
+    print STDOUT "m : mapping file with first column representative sequence name, second column group name\n";
     print STDOUT "d : derep file of given uc file (optional)\n";
     print STDOUT "\n\n";
     exit;
