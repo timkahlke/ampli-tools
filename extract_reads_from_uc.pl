@@ -53,7 +53,7 @@ sub _print{
     my $p = 0;
     while(my $line=<$fh>){
         if($line=~/^>.*$/){
-            my @s = grep{$_ ne ""}split(/[>\t\s]/,$line);
+            my @s = map{_remove_size($_)}grep{$_ ne ""}split(/[>\t\s]/,$line);
             $p=$reads->{$s[0]}?1:0;
         }
         next unless $p;
@@ -65,11 +65,10 @@ sub _print{
 
 sub _getGroup{
     my ($uf,$centroids) = @_;
-
     my $reads = {};
     open(my $uh,"<",$uf) or die "Failed to open $uf for reading";
     while(my $line=<$uh>){
-        my @s = grep{$_ ne ""}split(/[\n\t]/,$line);
+        my @s = map{_remove_size($_)}grep{$_ ne ""}split(/[\n\t]/,$line);
         next unless $centroids->{$s[-1]};
         $reads->{$s[-2]} = 1;
     }
@@ -81,12 +80,18 @@ sub _getGroup{
 }
 
 
+sub _remove_size{
+    my $a = shift;
+    return (split(/;size/,$a))[0];
+}
+
+
 sub _readMap{
     my $file = shift;
     my $m = {};
     open(my $mh,"<",$file) or die "Failed to open $file for reading";
     while(my $line=<$mh>){
-        my @s = grep{$_ ne ""}split(/[\s\t\n\r]/,$line);
+        my @s = map{_remove_size($_)}grep{$_ ne ""}split(/[\s\t\n\r]/,$line);
         $m->{$s[-1]}->{$s[0]} = 1;
     }
     close($mh);
