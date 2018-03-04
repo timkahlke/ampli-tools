@@ -3,6 +3,8 @@ Collection of helper scripts for amplicon sequence analysis, e.g. as outlined in
 
 Note: to get a full list of possible parameters and a short description of each tool just call the script without parameters.
 
+Cite: If using the relsease v1.0 please cite 
+"Kahlke, T. (2018, January 9). Ampli-Tools (Version 1.0). Zenodo. https://doi.org/10.5281/zenodo.1137872"
 
 ---
 
