@@ -6,6 +6,8 @@ Note: to get a full list of possible parameters and a short description of each 
 Cite: If using the relsease v1.0 please cite 
 "Kahlke, T. (2018, January 9). Ampli-Tools (Version 1.0). Zenodo. https://doi.org/10.5281/zenodo.1137872"
 
+[![Twitter URL](https://img.shields.io/twitter/url/https/twitter.com/AdvancedTwigTec.svg?style=social&label=Follow%20%40AdvancedTwigTec)](https://twitter.com/AdvancedTwigTec)
+
 ---
 
 ### docs/amplicon_pipeline.pdf
