@@ -18,11 +18,12 @@ if($@){
 
 sub main{
     our %opts;
-    getopts("i:o:l:",\%opts);
+    getopts("xi:o:l:",\%opts);
 
     my $af = $opts{'i'};
     my $of = $opts{'o'};
     my $ff = $opts{'l'};
+    my $inverse = $opts{'x'};
 
     if(!$af||!$of||!$ff){
         _usage();
@@ -37,7 +38,12 @@ sub main{
     while(my $line=<$ih>){
         if($line=~/^>.*$/){
             my @ls = grep{$_ ne ""}split(/[\s\t\n\r>]/,$line);
-            $print=$seqs->{$ls[0]}?1:0;
+            if($inverse){
+                $print=$seqs->{$ls[0]}?0:1;
+            }
+            else{
+                $print=$seqs->{$ls[0]}?1:0;
+            }
         }
         next unless $print;
         print $oh $line;
@@ -50,7 +56,7 @@ sub main{
 }
 
 
-# Read fasta file and retunr hash of sequence names.
+# Read fasta file and return hash of sequence names.
 sub _readFasta{
     my $file = shift;
     my $seqs = {};
@@ -69,6 +75,7 @@ sub _usage{
     print STDOUT "i : input fasta file\n";
     print STDOUT "o : output fasta file\n";
     print STDOUT "l : list of sequence IDs to be extracted from fasta file (one per line)\n";
+    print STDOUT "x : if set only sequences NOT in the list are extracted from fasta file\n";
     print STDOUT "\n\n";
     exit;
 }

@@ -157,7 +157,7 @@ sub _readMap{
     while(my $line=<$ih>){
         my @ls = grep{$_ ne ""}split(/[\s\t\n]/,$line);
         if($ls[0]=~/^.*R2.*$/){
-            print STDOUT "[WARNING] File ".$ls[0]." assumed to be a reverse read file and is ignored\n";
+            print STDOUT "[WARNING] File ".$ls[0]." assumed to be a reverse read file (includes \'R2\' in file name) and is ignored.To include the file please rename it and the corresponding reverse reads file.\n";
             next;
         }
         die "\n[ERROR] Unknown line format! More than two elements found in line $line!\nDoes your sample ID or fastq file include spaces or tabs?" unless
